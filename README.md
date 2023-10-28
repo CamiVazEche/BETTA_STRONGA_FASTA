@@ -1,0 +1,2 @@
+# BETTA_STRONGA_FASTA
+CSHL project 2023
