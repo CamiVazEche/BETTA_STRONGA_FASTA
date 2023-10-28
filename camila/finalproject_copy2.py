@@ -7,18 +7,28 @@ import argparse
 
 #Functions
 
+#PARSE AND PRINT
 def parse_fasta(fasta_file):
     sequences = {}
     seq_name = ""
-    with open(fasta_file, 'r') as file:
+    with open(fasta_file, "r") as file:
         for line in file:
             if line.startswith(">"):
-                seq_name = line.strip()[1:]
+                other_info = re.split(r" ", line)
+                seq_name = other_info[0][1:]
                 sequences[seq_name] = ""
             else:
                 sequences[seq_name] += line.strip()
     return sequences
 
+def print_fasta(sequence_dict):
+    for seq_name, sequence in sequence_dict.items():
+        print(f'>{seq_name}')
+        for i in range(0, len(sequence), 60):
+            line = sequence[i:i + 60]
+            print(line) 
+
+#SEQUENCE STATS
 def calculate_stats(sequences):
     sequence_lengths = [len(seq) for seq in sequences.values()]
     total_sequences = len(sequences)
@@ -36,19 +46,6 @@ def calculate_stats(sequences):
         if n50 >= half_total_length:
             l50 = length
             break
-		
-    # count each element(aa or nt) per sequence #
-
-    for seq_name in sequences:
-        count_comp = {}
-        for element in sequences[seq_name]:
-            if element not in count_comp:
-                count_comp[element] = 1
-            else:
-                count_comp[element] += 1
-        count_comp_sort = sorted(count_comp.items())
-
-        print(f"{seq_name} --- Composition: {count_comp_sort}")
 
     print(f"Number of sequences: {total_sequences}")
     print(f"Max length: {max_length}")
@@ -57,15 +54,54 @@ def calculate_stats(sequences):
     print(f"N50: {n50}")
     print(f"L50: {l50}")
 
+    composition(sequences)
+
+# count each element(aa or nt) per sequence, get the %composition #
+
+def composition(sequences):
+
+    for seq_name in sequences:
+        count_comp = {}
+        perc_comp = {}
+        for element in sequences[seq_name]:
+            if element not in count_comp:
+                count_comp[element] = 1
+            else:
+                count_comp[element] += 1
+        
+#    for seq_name in sequences:
+#        print(seq_name)
+#    for seq_name in sorted(count_comp):
+#        print(seq_name, count_comp[seq_name])
+
+        # this gets the total counts #
+    
+        for element in count_comp:    
+            content = (count_comp[element]) / len(sequences[seq_name])*100       
+            print(element, " ", content)
+
+#    nt_sort = ['A','C','G','T']
+       
+#    for seq in sequences:
+#        for element in nt_sort:
+#            print(count_comp[seq][element])
+#        print('\n')
+
+#        print(f"{seq_name} -- content: {count_comp}")
+
+#REVERSE COMPLEMENT - RELIES ON PRINT ABOVE
 def complement_base(base):
     complement_dict = {'A': 'T', 'T': 'A', 'C': 'G', 'G': 'C'}
     return complement_dict.get(base, base)
 
 def reverse_complement(sequences):
+    revcomps_dict = {}
     for header, sequence in sequences.items():
         revcomp_seq = ''.join([complement_base(base) for base in sequence[::-1]])
-        print(f"{header}\n{revcomp_seq}") 
-
+        revcomps_dict[header] = revcomp_seq
+    return revcomps_dict
+ 
+        
 ascii_art = """
 $$$$$$$\  $$$$$$$$\ $$$$$$$\        $$\   $$\ $$$$$$$$\ $$\    $$\ $$$$$$$$\ $$$$$$$\   
 $$  __$$\ $$  _____|$$  __$$\       $$ |  $$ |$$  _____|$$ |   $$ |$$  _____|$$  __$$\  
@@ -93,7 +129,8 @@ def main():
     if argument_input.action == "stats":
         calculate_stats(fasta_input)
     elif argument_input.action == "revcomp":
-        reverse_complement(fasta_input)
+        print_fasta(reverse_complement(fasta_input))
+        
     #IMPLEMENT ADDED ACTIONS HERE ACTIONS HERE WITH ELIF
     
 if __name__ == "__main__":
