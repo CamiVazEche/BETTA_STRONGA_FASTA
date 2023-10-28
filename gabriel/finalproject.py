@@ -1,4 +1,4 @@
-#! usr/bin/env python3
+#!/usr/bin/env python3
 
 import sys
 import re
@@ -7,18 +7,28 @@ import argparse
 
 #Functions
 
+#PARSE AND PRINT
 def parse_fasta(fasta_file):
     sequences = {}
     seq_name = ""
-    with open(fasta_file, 'r') as file:
+    with open(fasta_file, "r") as file:
         for line in file:
             if line.startswith(">"):
-                seq_name = line.strip()[1:]
+                other_info = re.split(r" ", line)
+                seq_name = other_info[0][1:]
                 sequences[seq_name] = ""
             else:
                 sequences[seq_name] += line.strip()
     return sequences
 
+def print_fasta(sequence_dict):
+    for seq_name, sequence in sequence_dict.items():
+        print(f'>{seq_name}')
+        for i in range(0, len(sequence), 60):
+            line = sequence[i:i + 60]
+            print(line) 
+
+#SEQUENCE STATS
 def calculate_stats(sequences):
     sequence_lengths = [len(seq) for seq in sequences.values()]
     total_sequences = len(sequences)
@@ -44,15 +54,19 @@ def calculate_stats(sequences):
     print(f"N50: {n50}")
     print(f"L50: {l50}")
 
+#REVERSE COMPLEMENT - RELIES ON PRINT ABOVE
 def complement_base(base):
     complement_dict = {'A': 'T', 'T': 'A', 'C': 'G', 'G': 'C'}
     return complement_dict.get(base, base)
 
 def reverse_complement(sequences):
+    revcomps_dict = {}
     for header, sequence in sequences.items():
         revcomp_seq = ''.join([complement_base(base) for base in sequence[::-1]])
-        print(f"{header}\n{revcomp_seq}") 
-
+        revcomps_dict[header] = revcomp_seq
+    return revcomps_dict
+ 
+        
 ascii_art = """
 $$$$$$$\  $$$$$$$$\ $$$$$$$\        $$\   $$\ $$$$$$$$\ $$\    $$\ $$$$$$$$\ $$$$$$$\   
 $$  __$$\ $$  _____|$$  __$$\       $$ |  $$ |$$  _____|$$ |   $$ |$$  _____|$$  __$$\  
@@ -80,7 +94,8 @@ def main():
     if argument_input.action == "stats":
         calculate_stats(fasta_input)
     elif argument_input.action == "revcomp":
-        reverse_complement(fasta_input)
+        print_fasta(reverse_complement(fasta_input))
+        
     #IMPLEMENT ADDED ACTIONS HERE ACTIONS HERE WITH ELIF
     
 if __name__ == "__main__":
