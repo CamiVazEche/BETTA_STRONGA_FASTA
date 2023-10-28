@@ -5,6 +5,7 @@ import re
 import statistics
 import argparse
 import re
+import matplotlib.pyplot as plt
 #Functions
 
 def parse_fasta(fasta_file):
@@ -69,6 +70,28 @@ def regex_seq(sequences, pattern):
     for header in sequences:
         for match_obj in re.finditer(pattern, sequences[header]):  
             print("\t".join([header,str(match_obj.start()),str( match_obj.end())])) 
+
+def len_bars(fasta_input):
+    lengths={}
+    for header in fasta_input:
+        #lengths[header]=len(fasta_input[header])
+        #print(lengths)
+    
+
+    #def plot1(keys,values)
+        x = header
+        y= len(fasta_input[header])
+        plt.barh(x,y)
+    plt.xlabel("ID")
+    plt.ylabel("Nucleotides")
+    plt.title("Sequence lengths")
+    plt.savefig("bar.png")
+    
+
+
+
+
+
 #MAIN
 
 def main():
@@ -89,6 +112,8 @@ def main():
     elif argument_input.action=="regex":
         regex_seq(fasta_input,argument_input.pattern)
     #IMPLEMENT ADDED ACTIONS HERE ACTIONS HERE WITH ELIF
+    len_bars(fasta_input)
     
+   
 if __name__ == "__main__":
     main()
