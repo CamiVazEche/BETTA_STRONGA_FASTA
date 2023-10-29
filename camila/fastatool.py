@@ -7,6 +7,7 @@ import re
 import statistics
 import argparse
 import matplotlib.pyplot as plt
+import os
 
 #Functions
 def GC_content(sequences):
@@ -42,36 +43,28 @@ def len_bars(fasta_input):
     plt.ylabel("Nucleotides")
     plt.title("Sequence lengths")
     plt.savefig("bar.png")
-
-import os    
-def split(fasta_input):
+    
+def split(fasta_file):
     # split the file into n files (n=number of sequences)
     directory = "split_FASTA_files"
     parent_dir = "/Users/pfb08/BETTA_STRONGA_FASTA"
     path = os.path.join(parent_dir, directory)
     try:
         os.mkdir(path)
+        print("Directory '%s' created" %directory)
     except OSError as error:
-        print(error)
-    print("Directory '%s' created" %directory)
-
-    with open(fasta_file, "r") as file:
-        define path with os
-
-        for line in file:
-            if line.startswith(">"):
-                write file
-
-keep track of count i = i+1
-
-define file names with number of fasta file, not use name 
-
-
-
-
-           #     write to new file adding current line and the next
-           #     use header as output file name 
-     
+        print("Caution to overwrite directory contents:", error.strerror)
+    else:
+        with open(fasta_file, "r") as file:
+            i=0
+            for line in file:
+                if line.startswith(">"):
+                    i+=1
+                    seq_name = line[1:].rstrip()    
+                    outfile = open(path + "/" + "seq_{0:04d}.fasta".format(i), 'w') 
+                outfile.write(line)
+            outfile.close()
+        print("Hurray! All files are done")
 
      
 def six_frames(fasta_dict):
@@ -188,13 +181,13 @@ $$ |      $$ |      $$$$$$$  |            $$ |$$$$$$$$\    \$  /   $$$$$$$$\ $$ 
 
 def main():
     parser = argparse.ArgumentParser(description="Thanks for using our script to parse your FASTA!", epilog=ascii_art, formatter_class=argparse.RawDescriptionHelpFormatter)
-    parser.add_argument("action", choices=["composition", "art", "six_frames", "length_bar", "stats", "revcomp", "regex"], help="<-- choose one of these options to carry out on your FASTA file")
+    parser.add_argument("action", choices=["split","composition", "art", "six_frames", "length_bar", "stats", "revcomp", "regex"], help="<-- choose one of these options to carry out on your FASTA file")
     parser.add_argument("fasta_file", help="<-- then input your FASTA")
     parser.add_argument("--pattern", help="<-- choose one of these options to carry out on your FASTA file")
     #ADD MORE ACTIONS HERE JUST LIKE ABOVE
     
     argument_input = parser.parse_args()
-    
+    fasta_file = argument_input.fasta_file 
     fasta_input = parse_fasta(argument_input.fasta_file)
 
     if argument_input.action == "stats":
@@ -212,6 +205,8 @@ def main():
         print(ascii_art)
     elif argument_input.action=="composition":
         composition(fasta_input)
+    elif argument_input.action=="split":
+        split(fasta_file)
         
     #IMPLEMENT ADDED ACTIONS HERE ACTIONS HERE WITH ELIF
     
