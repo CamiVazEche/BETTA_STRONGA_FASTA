@@ -42,7 +42,38 @@ def len_bars(fasta_input):
     plt.ylabel("Nucleotides")
     plt.title("Sequence lengths")
     plt.savefig("bar.png")
-    
+
+import os    
+def split(fasta_input):
+    # split the file into n files (n=number of sequences)
+    directory = "split_FASTA_files"
+    parent_dir = "/Users/pfb08/BETTA_STRONGA_FASTA"
+    path = os.path.join(parent_dir, directory)
+    try:
+        os.mkdir(path)
+    except OSError as error:
+        print(error)
+    print("Directory '%s' created" %directory)
+
+    with open(fasta_file, "r") as file:
+        define path with os
+
+        for line in file:
+            if line.startswith(">"):
+                write file
+
+keep track of count i = i+1
+
+define file names with number of fasta file, not use name 
+
+
+
+
+           #     write to new file adding current line and the next
+           #     use header as output file name 
+     
+
+     
 def six_frames(fasta_dict):
   frame_dict={}
   frames = [0,1,2]
@@ -110,26 +141,23 @@ def calculate_stats(sequences):
 def composition(sequences):
     #calculate aa or nt composition
     seq_keys = sequences.keys()   # gets a list of keys with seq names
-    print(seq_keys)
-
+    print("This is the content (%) for each sequence:")
     for seq_name in sequences:
         count_comp = {}
-        perc_comp = {}
         for element in sequences[seq_name]:
             if element not in count_comp:
                 count_comp[element] = 1 
             else:
                 count_comp[element] += 1
         sorted_count = sorted(count_comp)  ### gets a list of the keys (ATGC or AAs)
-
+        
     # prints seq name and sorted content of nt or aa    
-        print('\n',seq_name)    
+        print(seq_name)    
         contents = []   ### gets a list of the content values
         for element in sorted_count:    
             content = round((count_comp[element]) / len(sequences[seq_name])*100, 1)    
             contents.append(content)
             print(element, " ", content)
-        
 
 
 #REVERSE COMPLEMENT - RELIES ON PRINT ABOVE
