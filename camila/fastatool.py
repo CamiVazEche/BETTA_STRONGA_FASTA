@@ -117,10 +117,14 @@ def composition(sequences):
                 count_comp[element] = 1 
             else:
                 count_comp[element] += 1
-    
-        for element in count_comp:    
-            content = (count_comp[element]) / len(sequences[seq_name])*100    
+        sorted_count = sorted(count_comp)  ### gets a list of the keys (ATGC or AAs)
+     
+    # prints seq name and sorted content of nt or aa    
+        print('\n',seq_name)    
+        for element in sorted_count:    
+            content = round((count_comp[element]) / len(sequences[seq_name])*100, 1)    
             print(element, " ", content)
+
 
 #REVERSE COMPLEMENT - RELIES ON PRINT ABOVE
 def complement_base(base):
