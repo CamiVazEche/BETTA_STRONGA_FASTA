@@ -109,6 +109,9 @@ def calculate_stats(sequences):
 
 def composition(sequences):
     #calculate aa or nt composition
+    seq_keys = sequences.keys()   # gets a list of keys with seq names
+    print(seq_keys)
+
     for seq_name in sequences:
         count_comp = {}
         perc_comp = {}
@@ -118,12 +121,15 @@ def composition(sequences):
             else:
                 count_comp[element] += 1
         sorted_count = sorted(count_comp)  ### gets a list of the keys (ATGC or AAs)
-     
+
     # prints seq name and sorted content of nt or aa    
         print('\n',seq_name)    
+        contents = []   ### gets a list of the content values
         for element in sorted_count:    
             content = round((count_comp[element]) / len(sequences[seq_name])*100, 1)    
+            contents.append(content)
             print(element, " ", content)
+        
 
 
 #REVERSE COMPLEMENT - RELIES ON PRINT ABOVE
