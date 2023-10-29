@@ -66,7 +66,15 @@ def split(fasta_file):
             outfile.close()
         print("Hurray! All files are done")
 
-     
+def seq_ids(fasta_dict):
+    # get a list of id names
+    outfile = open("seq_ids.txt", 'w')
+    for seq_name in fasta_dict:
+        outfile.write(f"{seq_name}\n")
+    outfile.close()
+    print("Seq_ids saved in 'seq_ids.txt'") 
+
+ 
 def six_frames(fasta_dict):
   frame_dict={}
   frames = [0,1,2]
@@ -181,7 +189,7 @@ $$ |      $$ |      $$$$$$$  |            $$ |$$$$$$$$\    \$  /   $$$$$$$$\ $$ 
 
 def main():
     parser = argparse.ArgumentParser(description="Thanks for using our script to parse your FASTA!", epilog=ascii_art, formatter_class=argparse.RawDescriptionHelpFormatter)
-    parser.add_argument("action", choices=["split","composition", "art", "six_frames", "length_bar", "stats", "revcomp", "regex"], help="<-- choose one of these options to carry out on your FASTA file")
+    parser.add_argument("action", choices=["seq_ids","split","composition", "art", "six_frames", "length_bar", "stats", "revcomp", "regex"], help="<-- choose one of these options to carry out on your FASTA file")
     parser.add_argument("fasta_file", help="<-- then input your FASTA")
     parser.add_argument("--pattern", help="<-- choose one of these options to carry out on your FASTA file")
     #ADD MORE ACTIONS HERE JUST LIKE ABOVE
@@ -207,7 +215,9 @@ def main():
         composition(fasta_input)
     elif argument_input.action=="split":
         split(fasta_file)
-        
+    elif argument_input.action=='seq_ids':
+        seq_ids(fasta_input)
+    
     #IMPLEMENT ADDED ACTIONS HERE ACTIONS HERE WITH ELIF
     
 if __name__ == "__main__":
