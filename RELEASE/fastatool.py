@@ -118,7 +118,7 @@ def logo(alignment):
 
 
 def GC_content(sequences):
-        # calculate gc statistics for a FASTA dictionary
+    # calculate gc statistics for a FASTA dictionary
     g_count_total = 0 
     c_count_total = 0 
     a_count_total = 0 
@@ -129,7 +129,9 @@ def GC_content(sequences):
         c_count_total += seq.count('C')
         a_count_total += seq.count('A')
         t_count_total += seq.count('T')
-    gc_content_total = (c_count_total + g_count_total) / (c_count_total + g_count_total + a_count_total + t_count_total)
+    gc_content_total = round((c_count_total + g_count_total) / (c_count_total + g_count_total + a_count_total + t_count_total) *100,2) 
+    print(gc_content_total)
+
     return gc_content_total
 
 def GC_histo(sequences):
@@ -271,7 +273,6 @@ def calculate_stats(sequences):
     n50 = 0
     l50 = 0
     half_total_length = sum(sequence_lengths) / 2
-    gc = GC_content(sequences)
 
     for length in sorted_lengths:
         n50 += length
@@ -285,7 +286,6 @@ def calculate_stats(sequences):
     print(f"Average length: {avg_length:.2f}")
     print(f"N50: {n50}")
     print(f"L50: {l50}")
-    print(f'GC: {gc:.4%}')
 
 
 def composition(sequences):
@@ -336,7 +336,7 @@ ascii_art = """
 
 def main():
     parser = argparse.ArgumentParser(description="Thanks for using our script to parse your FASTA!", epilog=ascii_art, formatter_class=argparse.RawDescriptionHelpFormatter)
-    parser.add_argument("action", choices=["longest_peptide", "logo", "seq_ids","split_dict", "split", "composition", "art", "six_frames", "length_bar", "stats", "revcomp", "regex", "GC"], help="<-- choose one of these options to carry out on your FASTA file")
+    parser.add_argument("action", choices=["print_fasta", "all_CDs", "longest_peptide", "logo", "seq_ids", "split_dict", "split", "compositio", "art", "six_frames", "length_bar", "stats", "revcomp", "regex", "GC_content","GC_histo"], help="<-- choose one of these options to carry out on your FASTA file")
     parser.add_argument("fasta_file", help="<-- then input your FASTA")
     parser.add_argument("--pattern", help="<-- choose one of these options to carry out on your FASTA file")
     #ADD MORE ACTIONS HERE JUST LIKE ABOVE
@@ -362,18 +362,24 @@ def main():
         print(out)
     elif argument_input.action=="art":
         print(ascii_art)
+    elif argument_input.action=="print_fasta":
+        fasta_input = parse_fasta(argument_input.fasta_file)
+        print_fasta(fasta_input) 
     elif argument_input.action=="split_dict":
         fasta_input = parse_fasta(argument_input.fasta_file)
         split_dict(fasta_input)
     elif argument_input.action=="composition":
-        fasta_input = paree_fasta(argument_input.fasta_file)
+        fasta_input = parse_fasta(argument_input.fasta_file)
         composition(fasta_input)
     elif argument_input.action=="split":
         split(argument_input.fasta_file)
     elif argument_input.action=='seq_ids':
         fasta_input = parse_fasta(argument_input.fasta_file)
         seq_ids(fasta_input)
-    elif argument_input.action=="GC":
+    elif argument_input.action=="GC_content":
+        fasta_input = parse_fasta(argument_input.fasta_file)
+        GC_content(fasta_input) 
+    elif argument_input.action=="GC_histo":
         fasta_input = parse_fasta(argument_input.fasta_file)
         GC_histo(fasta_input)
     elif argument_input.action=="logo":
@@ -386,7 +392,14 @@ def main():
         CDs_dict=get_all_CDs(prot_dict_P07)
         max_len_dict=max_len_CDs(CDs_dict)
         print_fasta(max_len_dict)
-        
+    elif argument_input.action=="all_CDs":
+        fasta_input = parse_fasta(argument_input.fasta_file)
+        Result=six_frames(fasta_input)
+        sixframes_codon_python07=sixframes_codon_converter(Result)
+        prot_dict_P07=protein_dict(sixframes_codon_python07)
+        CDs_dict=get_all_CDs(prot_dict_P07)
+        print_fasta(CDs_dict)
+ 
     #IMPLEMENT ADDED ACTIONS HERE ACTIONS HERE WITH ELIF
     
 if __name__ == "__main__":
