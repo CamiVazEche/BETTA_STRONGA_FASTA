@@ -23,11 +23,14 @@ def translation(seq):
   for i in range(0,len(seq),3):
     if len(seq[i:i+3]) == 3:
       codon=seq[i:i+3]
-      protein+=table[codon]
+      if codon in table:
+        protein+=table[codon]
+      else:
+        protein+='X'
   return protein
-seq='ATGCGTGACGTTTGACGGTAGGCGTGAGGCGATTTAGCGGTAGGACGATGCGATGATGATG'
+seq='ATGCGTGACGTTTGACGGTAGGCGTGAGNGCGATTNNTAGCGnGGTAGGACGATGCGATGATGATG'
 aa_seq= translation(seq)
-#print(aa_seq)
+print(aa_seq)
   
 
 def parse_fasta(fasta_file):
@@ -112,7 +115,7 @@ def sixframes_codon_converter(frame_dict):
       sixframes_codon_dict[seq_name][frame]=sixframes_codon_list
   return (sixframes_codon_dict)
 sixframes_codon_python07=sixframes_codon_converter(Result)
-print(sixframes_codon_python07)
+#print(sixframes_codon_python07)
 
 '''def create_CDs_dict(codon_dict):
   CDs_dict={}
@@ -148,7 +151,7 @@ def protein_dict(sixframes_codon_dict):
      sixframes_prot_dict[seq_name][frame]=translation(codon_str)
   return sixframes_prot_dict
 prot_dict_P07=protein_dict(sixframes_codon_python07)
-print(prot_dict_P07)
+#print(prot_dict_P07)
 
 def get_all_CDs(sixframes_prot_dict):
   sixframes_CDs_dict={}
@@ -162,7 +165,7 @@ def get_all_CDs(sixframes_prot_dict):
     sixframes_CDs_dict[seq_name]=CDs_list
   return sixframes_CDs_dict
 CDs_dict=get_all_CDs(prot_dict_P07)
-print(CDs_dict)
+#print(CDs_dict)
 '''def rm_small_CDs(sixframes_CDs_dict):
   sixframes_CDs_dict_rms={}
   small_CDs_list=[]
@@ -180,8 +183,9 @@ print(rm_CDs_P07)'''
 def max_len_CDs(sixframes_CDs_dict):
   max_CDs_dict={}
   for seq_name in sixframes_CDs_dict:
-    max_CDs=max(sixframes_CDs_dict[seq_name], key=len)    
-    max_CDs_dict[seq_name]=max_CDs
+   max_CDs=max(sixframes_CDs_dict[seq_name], key=len)    
+   max_CDs_dict[seq_name]=max_CDs
   return max_CDs_dict
 max_len_dict=max_len_CDs(CDs_dict)
-print(max_len_dict)
+#print(max_len_dict)
+
