@@ -47,7 +47,7 @@ def len_bars(fasta_input):
 def split(fasta_file):
     # split the file into n files (n=number of sequences)
     directory = "split_fasta_files"
-    parent_dir = "/Users/pfb08/BETTA_STRONGA_FASTA"
+    parent_dir = "."
     path = os.path.join(parent_dir, directory)
     try:
         os.mkdir(path)

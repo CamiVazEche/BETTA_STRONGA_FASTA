@@ -1,0 +1,11 @@
+This is the content (%) for each sequence:
+gi|170746|gb|M12277.1|WHTH4091
+A   20.2
+C   34.9
+G   24.5
+T   20.4
+gi|603555|emb|X83548.1|
+A   26.4
+C   23.0
+G   27.0
+T   23.6
