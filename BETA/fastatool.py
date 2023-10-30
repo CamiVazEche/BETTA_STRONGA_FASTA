@@ -102,7 +102,7 @@ def logo(alignment):
 	
 	for record in alignment:
 	  seqs.append(str(record.seq))
-	
+    print(str(record.seq))	
 	counts_matrix=logomaker.alignment_to_matrix(seqs)
 	output = logomaker.Logo(counts_matrix)
 	
@@ -259,17 +259,23 @@ def calculate_stats(sequences):
 
 def composition(sequences):
     #calculate aa or nt composition
+    seq_keys = sequences.keys()   # gets a list of keys with seq names
+    print("This is the content (%) for each sequence:")
     for seq_name in sequences:
         count_comp = {}
-        perc_comp = {}
         for element in sequences[seq_name]:
             if element not in count_comp:
                 count_comp[element] = 1 
             else:
                 count_comp[element] += 1
+        sorted_count = sorted(count_comp)  ### gets a list of the keys (ATGC or AAs)
     
-        for element in count_comp:    
-            content = (count_comp[element]) / len(sequences[seq_name])*100    
+    # prints seq name and sorted content of nt or aa    
+        print(seq_name)    
+        contents = []   ### gets a list of the content values
+        for element in sorted_count:    
+            content = round((count_comp[element]) / len(sequences[seq_name])*100, 1)    
+            contents.append(content)
             print(element, " ", content)
 
 #REVERSE COMPLEMENT - RELIES ON PRINT ABOVE
@@ -326,7 +332,7 @@ def main():
     elif argument_input.action=="art":
         print(ascii_art)
     elif argument_input.action=="composition":
-        fasta_input = parse_fasta(argument_input.fasta_file)
+        fasta_input = paree_fasta(argument_input.fasta_file)
         composition(fasta_input)
     elif argument_input.action=="split":
         split(argument_input.fasta_file)
