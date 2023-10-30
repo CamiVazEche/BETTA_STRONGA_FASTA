@@ -105,7 +105,7 @@ def logo(alignment):
     
     for record in alignment:
       seqs.append(str(record.seq))
-    print(str(record.seq))    
+    #print(str(record.seq))    
     counts_matrix=logomaker.alignment_to_matrix(seqs)
     output = logomaker.Logo(counts_matrix)
     
