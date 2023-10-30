@@ -327,6 +327,9 @@ ascii_art = """
 #       #     # #          #######    #        #   #  ####### #######
 #       #     # #               #     #         # #   #     # #     #
 #       ######  #               #     #######    #    #     # #     # 
+
+
+###
 """
 
 #MAIN
@@ -339,7 +342,6 @@ def main():
     #ADD MORE ACTIONS HERE JUST LIKE ABOVE
     
     argument_input = parser.parse_args()
-    
 
     if argument_input.action == "stats":
         fasta_input = parse_fasta(argument_input.fasta_file)
