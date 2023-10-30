@@ -23,12 +23,12 @@ print("Alignment length %i" %alignment.get_alignment_length())
 seqs=list()
 
 for record in alignment:
-# print(record.seq + "" + record.id)
+ print(record.seq + "" + record.id)
  seqs.append(str(record.seq))
 
-#print(seqs)
+print(seqs)
 counts_matrix=logomaker.alignment_to_matrix(seqs)
-#print(counts_matrix)
+print(counts_matrix)
  #counts_mat.head()
 #count matrix to probability matrix
 output = logomaker.Logo(counts_matrix)
